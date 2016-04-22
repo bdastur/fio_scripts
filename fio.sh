@@ -48,6 +48,7 @@ CUSTOMBLOCKSIZE=-1
 FILE=fiodata
 FILENAME="filename=$FILE"
 RAW=0
+IOENGINE=psync
 
 DTRACE=0
 DTRACE1=""
@@ -100,7 +101,7 @@ OPTIONS:
 EOF
 }
 
-while getopts hz:ycb:nr:xe:d:o:it:s:l:u:m:fw: OPTION
+while getopts hz:ycb:nr:xe:d:o:it:s:l:u:m:fw:g: OPTION
 do
      case $OPTION in
          h)
@@ -118,6 +119,9 @@ do
              ;;
          e)
              RECORDSIZE="${OPTARG}k"
+             ;;
+         g)
+             IOENGINE=${OPTARG}
              ;;
          r)
              FILENAME="filename=$OPTARG"
@@ -305,7 +309,7 @@ fi
 
 mkdir $OUTPUT > /dev/null 2>&1
 if [ ! -d $OUTPUT ]; then 
-  echo "directory $OUTPUT does not exist"
+  echo "directory $OUTPUT does not exist."
   exit
 fi
 
@@ -423,7 +427,7 @@ if [ -f /etc/delphix/version ] && [ $RAW -eq 0 ] ; then
 fi 
 
 if [ ! -d $DIRECTORY ]; then 
-  echo "directory $DIRECTORY does not exist"
+  echo "directory $DIRECTORY does not exist."
   exit
 fi
 
@@ -594,7 +598,7 @@ runtime=$SECS
 randrepeat=0
 end_fsync=1
 group_reporting=1
-ioengine=psync
+ioengine=${IOENGINE}
 fadvise_hint=0
 EOF
 done > $JOBFILE
